@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 type TSearchFormProps = {
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
   searchText: string;

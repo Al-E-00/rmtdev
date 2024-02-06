@@ -1,12 +1,7 @@
-import JobItemContent from "./JobItemContent";
-import Sidebar from "./Sidebar";
-import { TJobItemsProps } from "./types/types";
+type TContainerProps = {
+  children: React.ReactNode;
+};
 
-export default function Container({ jobItems }: TJobItemsProps) {
-  return (
-    <div className="container">
-      <Sidebar jobItems={jobItems} />
-      <JobItemContent />
-    </div>
-  );
+export default function Container({ children }: TContainerProps) {
+  return <div className="container">{children}</div>;
 }
