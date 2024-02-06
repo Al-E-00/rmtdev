@@ -6,7 +6,3 @@ export type TJobItem = {
   relevanceScore: number;
   daysAgo: number;
 };
-
-export type TJobItemsProps = {
-  jobItems: TJobItem[];
-};
