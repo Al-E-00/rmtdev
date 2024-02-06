@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { TJobItem } from "./types";
+import { TJobDetails, TJobItem } from "./types";
+import { BASE_API_URL } from "./constants";
 
 export function useJobItems(searchText: string) {
   const [jobItems, setJobItems] = useState<TJobItem[]>([]);
@@ -12,7 +13,7 @@ export function useJobItems(searchText: string) {
 
     const fetchData = async () => {
       setIsLoading(true);
-      const searchApiAdderss = `https://bytegrad.com/course-assets/projects/rmtdev/api/data?search=${searchText}`;
+      const searchApiAdderss = `${BASE_API_URL}?search=${searchText}`;
 
       try {
         const response = await fetch(searchApiAdderss);
@@ -39,4 +40,61 @@ export function useJobItems(searchText: string) {
   }, [searchText]);
 
   return [jobItemsSliced, isLoading] as const;
+}
+
+export function useJobDetails(id: number | null) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [jobDetail, setJobDetail] = useState<TJobDetails | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`${BASE_API_URL}/${id}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const jobDetail = await response.json();
+        setJobDetail(jobDetail.jobItem);
+      } catch {
+        throw new Error("Network response was not ok");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [id]);
+
+  return [jobDetail, isLoading] as const;
+}
+
+export function useActiveId() {
+  const [activeId, setActiveId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const id = +window.location.hash.slice(1);
+      setActiveId(id);
+    };
+    handleHashChange();
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
+  return activeId;
+}
+
+export function useActiveJobItem() {
+  const activeId = useActiveId();
+  const [jobDetail, isJobDetailLoading] = useJobDetails(activeId);
+
+  return [jobDetail, isJobDetailLoading] as const;
 }
