@@ -101,18 +101,18 @@ export function useActiveJobItem() {
   return [jobDetail, isLoading] as const;
 }
 
-export function useDebouncedText(searchText: string) {
-  const [debouncedSearchText, setDebouncedSearchText] = useState("");
+export function useDebounce<T>(value: T, delay: number = 500): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setDebouncedSearchText(searchText);
-    }, 500);
+      setDebouncedValue(value);
+    }, delay);
 
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [searchText]);
+  }, [value, delay]);
 
-  return debouncedSearchText;
+  return debouncedValue;
 }
