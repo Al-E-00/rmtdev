@@ -3,42 +3,47 @@ import { TJobDetails, TJobItem } from "./types";
 import { BASE_API_URL } from "./constants";
 import { useQuery } from "@tanstack/react-query";
 
+type JobItemsApiResponse = {
+  public: boolean;
+  sorted: boolean;
+  jobItems: TJobItem[];
+};
+
+const fetchJobItems = async (
+  searchText: string
+): Promise<JobItemsApiResponse> => {
+  const searchApiAdderss = `${BASE_API_URL}?search=${searchText}`;
+
+  const response = await fetch(searchApiAdderss);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.description);
+  }
+
+  const data = await response.json();
+
+  return data;
+};
+
 export function useJobItems(searchText: string) {
-  const [jobItems, setJobItems] = useState<TJobItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data, isInitialLoading } = useQuery(
+    ["job-items", searchText],
+    () => (searchText ? fetchJobItems(searchText) : null),
+    {
+      staleTime: 1000 * 60 * 60,
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: Boolean(searchText),
+      onError: (error) => {
+        console.error("Error fetching job details", error);
+      },
+    }
+  );
 
-  useEffect(() => {
-    if (!searchText) return;
-
-    const fetchData = async () => {
-      setIsLoading(true);
-      const searchApiAdderss = `${BASE_API_URL}?search=${searchText}`;
-
-      try {
-        const response = await fetch(searchApiAdderss);
-        if (!response.ok) {
-          throw new Error("Network response error");
-        }
-
-        const data = await response.json();
-        const jobItems = data.jobItems;
-
-        setJobItems(jobItems);
-      } catch {
-        throw new Error("Error fetching data from the server");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      setJobItems([]);
-    };
-  }, [searchText]);
-
-  return { jobItems, isLoading } as const;
+  return {
+    jobItems: data?.jobItems,
+    isLoading: isInitialLoading,
+  } as const;
 }
 
 type TFetchJobItem = {
