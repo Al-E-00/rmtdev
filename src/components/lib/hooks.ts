@@ -7,10 +7,6 @@ export function useJobItems(searchText: string) {
   const [jobItems, setJobItems] = useState<TJobItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const totalNumberOfResults = jobItems.length;
-
-  const jobItemsSliced = jobItems.slice(0, 7);
-
   useEffect(() => {
     if (!searchText) return;
 
@@ -42,7 +38,7 @@ export function useJobItems(searchText: string) {
     };
   }, [searchText]);
 
-  return { jobItemsSliced, isLoading, totalNumberOfResults } as const;
+  return { jobItems, isLoading } as const;
 }
 
 type TFetchJobItem = {
@@ -52,8 +48,12 @@ type TFetchJobItem = {
 
 const fetchJobItem = async (id: number): Promise<TFetchJobItem> => {
   const response = await fetch(`${BASE_API_URL}/${id}`);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.description);
+  }
+
   const data = await response.json();
-  console.log(data);
 
   return data;
 };
@@ -67,7 +67,9 @@ export function useJobDetails(id: number | null) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(id),
-      onError: (error) => {},
+      onError: (error) => {
+        console.error("Error fetching job details", error);
+      },
     }
   );
 
