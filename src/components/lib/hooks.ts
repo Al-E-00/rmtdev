@@ -41,7 +41,7 @@ export function useJobItems(searchText: string) {
     };
   }, [searchText]);
 
-  return [jobItemsSliced, isLoading, totalNumberOfResults] as const;
+  return { jobItemsSliced, isLoading, totalNumberOfResults } as const;
 }
 
 export function useJobDetails(id: number | null) {
@@ -99,4 +99,20 @@ export function useActiveJobItem() {
   const [jobDetail, isLoading] = useJobDetails(activeId);
 
   return [jobDetail, isLoading] as const;
+}
+
+export function useDebouncedText(searchText: string) {
+  const [debouncedSearchText, setDebouncedSearchText] = useState("");
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchText(searchText);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [searchText]);
+
+  return debouncedSearchText;
 }
