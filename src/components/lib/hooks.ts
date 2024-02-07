@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TJobDetails, TJobItem } from "./types";
 import { BASE_API_URL } from "./constants";
 import { useQuery } from "@tanstack/react-query";
+import { handleError } from "./utils";
 
 type JobItemsApiResponse = {
   public: boolean;
@@ -34,9 +35,7 @@ export function useJobItems(searchText: string) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(searchText),
-      onError: (error) => {
-        console.error("Error fetching job details", error);
-      },
+      onError: (error) => handleError(error),
     }
   );
 
@@ -72,9 +71,7 @@ export function useJobDetails(id: number | null) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(id),
-      onError: (error) => {
-        console.error("Error fetching job details", error);
-      },
+      onError: (error) => handleError(error),
     }
   );
 
