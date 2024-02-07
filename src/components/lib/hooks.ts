@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { TJobDetails, TJobItem } from "./types";
 import { BASE_API_URL } from "./constants";
+import { useQuery } from "@tanstack/react-query";
 
 export function useJobItems(searchText: string) {
   const [jobItems, setJobItems] = useState<TJobItem[]>([]);
@@ -44,34 +45,34 @@ export function useJobItems(searchText: string) {
   return { jobItemsSliced, isLoading, totalNumberOfResults } as const;
 }
 
+type TFetchJobItem = {
+  public: boolean;
+  jobItem: TJobDetails | null;
+};
+
+const fetchJobItem = async (id: number): Promise<TFetchJobItem> => {
+  const response = await fetch(`${BASE_API_URL}/${id}`);
+  const data = await response.json();
+  console.log(data);
+
+  return data;
+};
+
 export function useJobDetails(id: number | null) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [jobDetail, setJobDetail] = useState<TJobDetails | null>(null);
-
-  useEffect(() => {
-    if (!id) return;
-
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`${BASE_API_URL}/${id}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const jobDetail = await response.json();
-        setJobDetail(jobDetail.jobItem);
-      } catch {
-        throw new Error("Network response was not ok");
-      } finally {
-        setIsLoading(false);
-      }
+  const { data, isInitialLoading } = useQuery(
+    ["job-item", id],
+    () => (id ? fetchJobItem(id) : null),
+    {
+      staleTime: 1000 * 60 * 60,
+      refetchOnWindowFocus: false,
+      retry: false,
+      enabled: Boolean(id),
+      onError: (error) => {},
     }
+  );
 
-    fetchData();
-  }, [id]);
-
-  return [jobDetail, isLoading] as const;
+  const jobItem = data?.jobItem;
+  return [jobItem, isInitialLoading] as const;
 }
 
 export function useActiveId() {
