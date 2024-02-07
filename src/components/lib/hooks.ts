@@ -94,7 +94,7 @@ export function useActiveId() {
 
 export function useActiveJobItem() {
   const activeId = useActiveId();
-  const [jobDetail, isJobDetailLoading] = useJobDetails(activeId);
+  const [jobDetail, isLoading] = useJobDetails(activeId);
 
-  return [jobDetail, isJobDetailLoading] as const;
+  return [jobDetail, isLoading] as const;
 }

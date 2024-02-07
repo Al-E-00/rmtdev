@@ -1,16 +1,10 @@
 import BookmarkIcon from "./BookmarkIcon";
 import Spinner from "./Spinner";
-import { TJobDetails } from "./lib/types";
+import { useActiveJobItem } from "./lib/hooks";
 
-type TJobItemContentProps = {
-  jobDetail: TJobDetails | null;
-  isJobDetailLoading: boolean;
-};
+export default function JobItemContent() {
+  const [jobDetail, isJobDetailLoading] = useActiveJobItem();
 
-export default function JobItemContent({
-  jobDetail,
-  isJobDetailLoading,
-}: TJobItemContentProps) {
   const {
     id,
     description,
@@ -28,8 +22,9 @@ export default function JobItemContent({
     companyURL,
   } = jobDetail ?? {};
 
+  if (isJobDetailLoading) return <LoadingJobContent />;
+
   if (!jobDetail) return <EmptyJobContent />;
-  if (isJobDetailLoading) return <Spinner />;
 
   return (
     <section className="job-details">
@@ -112,6 +107,16 @@ export default function JobItemContent({
             it!
           </p>
         </footer>
+      </div>
+    </section>
+  );
+}
+
+function LoadingJobContent() {
+  return (
+    <section className="job-details">
+      <div>
+        <Spinner />
       </div>
     </section>
   );
