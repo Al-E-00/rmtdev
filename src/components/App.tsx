@@ -26,16 +26,17 @@ function App() {
   const [sortBy, setSortBy] = useState<TSortBy>("relevant");
 
   //derived / computed state
-  const jobItemsSorted = jobItems?.sort((a, b) => {
-    if (sortBy === "relevant") {
-      return b.relevanceScore - a.relevanceScore;
-    } else {
-      return a.daysAgo - b.daysAgo;
-    }
-  });
+  const jobItemsSorted =
+    jobItems?.sort((a, b) => {
+      if (sortBy === "relevant") {
+        return b.relevanceScore - a.relevanceScore;
+      } else {
+        return a.daysAgo - b.daysAgo;
+      }
+    }) || [];
 
   const jobItemsSliced =
-    jobItemsSorted?.slice(
+    jobItemsSorted.slice(
       (currentPage - 1) * RESULTS_PER_PAGE,
       currentPage * RESULTS_PER_PAGE
     ) || [];
@@ -52,6 +53,7 @@ function App() {
   };
 
   const handleChangeSortBy = (newSortBy: TSortBy) => {
+    setCurrentPage(1);
     setSortBy(newSortBy);
   };
 
