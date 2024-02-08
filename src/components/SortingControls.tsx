@@ -12,24 +12,37 @@ export default function SortingControls({
   return (
     <section className="sorting">
       <i className="fa-solid fa-arrow-down-short-wide"></i>
-
-      <button
+      <SortingButtons
+        isActive={sortBy === "relevant"}
         onClick={() => onClick("relevant")}
-        className={`sorting__button sorting__button--relevant ${
-          sortBy === "relevant" ? "sorting__button--active" : ""
-        }`}
       >
         Relevant
-      </button>
-
-      <button
+      </SortingButtons>
+      <SortingButtons
+        isActive={sortBy === "recent"}
         onClick={() => onClick("recent")}
-        className={`sorting__button sorting__button--recent ${
-          sortBy === "recent" ? "sorting__button--active" : ""
-        }`}
       >
         Recent
-      </button>
+      </SortingButtons>
     </section>
+  );
+}
+
+type TSortingButtons = {
+  isActive: boolean;
+  onClick: () => void;
+  children: string;
+};
+
+function SortingButtons({ isActive, onClick, children }: TSortingButtons) {
+  return (
+    <button
+      onClick={onClick}
+      className={`sorting__button sorting__button--recent ${
+        isActive ? "sorting__button--active" : ""
+      }`}
+    >
+      {children}
+    </button>
   );
 }

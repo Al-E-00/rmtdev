@@ -19,3 +19,5 @@ export type TJobDetails = TJobItem & {
 };
 
 export type TSortBy = "relevant" | "recent";
+
+export type TPageDirection = "next" | "prev";

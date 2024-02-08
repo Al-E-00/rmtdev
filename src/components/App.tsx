@@ -15,7 +15,7 @@ import PaginationControls from "./PaginationControls";
 import { useDebounce, useJobItems } from "./lib/hooks";
 import { Toaster } from "react-hot-toast";
 import { RESULTS_PER_PAGE } from "./lib/constants";
-import { TSortBy } from "./lib/types";
+import { TPageDirection, TSortBy } from "./lib/types";
 
 function App() {
   //state
@@ -27,7 +27,7 @@ function App() {
 
   //derived / computed state
   const jobItemsSorted =
-    jobItems?.sort((a, b) => {
+    [...(jobItems || [])].sort((a, b) => {
       if (sortBy === "relevant") {
         return b.relevanceScore - a.relevanceScore;
       } else {
@@ -44,7 +44,7 @@ function App() {
   const totalNumberOfPages = Math.ceil(totalNumberOfResults / RESULTS_PER_PAGE);
 
   //event handlers / actions
-  const handleChangePage = (direction: "next" | "prev") => {
+  const handleChangePage = (direction: TPageDirection) => {
     if (direction === "prev") {
       setCurrentPage((prev) => prev - 1);
     } else if (direction === "next") {
