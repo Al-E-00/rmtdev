@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Background from "./Background";
 import Container from "./Container";
 import Footer from "./Footer";
@@ -16,12 +16,26 @@ import { useDebounce, useJobItems } from "./lib/hooks";
 import { Toaster } from "react-hot-toast";
 
 function App() {
+  //state
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText, 250);
   const { jobItems, isLoading } = useJobItems(debouncedSearchText);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const jobItemsSliced = jobItems?.slice(0, 7) || [];
+  //derived / computed state
+  const jobItemsSliced =
+    jobItems?.slice((currentPage - 1) * 7, currentPage * 7) || [];
   const totalNumberOfResults = jobItems?.length || 0;
+  const totalNumberOfPages = Math.ceil(totalNumberOfResults / 7);
+
+  //event handlers / actions
+  const handleChangePage = (direction: "next" | "prev") => {
+    if (direction === "prev") {
+      setCurrentPage((prev) => prev - 1);
+    } else if (direction === "next") {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <>
@@ -44,7 +58,11 @@ function App() {
           </SidebarTop>
 
           <JobList jobItems={jobItemsSliced} isLoading={isLoading} />
-          <PaginationControls />
+          <PaginationControls
+            onClick={handleChangePage}
+            currentPage={currentPage}
+            totalNumberOfPages={totalNumberOfPages}
+          />
         </Sidebar>
         <JobItemContent />
       </Container>
