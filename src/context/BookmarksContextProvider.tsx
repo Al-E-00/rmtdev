@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext } from "react";
 import { useLocalStorage } from "../components/lib/hooks";
 
 type TBookmarksContext = {
@@ -33,15 +33,4 @@ export default function BookmarksContextProvider({
       {children}
     </BookmarksContext.Provider>
   );
-}
-
-export function useBookmarksContext() {
-  const context = useContext(BookmarksContext);
-  if (!context) {
-    throw new Error(
-      "useContext(BookmarksContext) must be used within a BookmarksContextProvider"
-    );
-  }
-
-  return context;
 }
