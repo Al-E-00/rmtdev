@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TJobDetails, TJobItem } from "./types";
 import { BASE_API_URL } from "./constants";
 import { useQuery } from "@tanstack/react-query";
@@ -120,4 +120,19 @@ export function useDebounce<T>(value: T, delay: number = 500): T {
   }, [value, delay]);
 
   return debouncedValue;
+}
+
+export function useLocalStorage<T>(
+  key: string,
+  initialValue: T
+): [T, React.Dispatch<React.SetStateAction<T>>] {
+  const [value, setValue] = useState(() =>
+    JSON.parse(localStorage.getItem(key) || JSON.stringify(initialValue))
+  );
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, [value, key]);
+
+  return [value, setValue];
 }
