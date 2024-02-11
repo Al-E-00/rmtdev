@@ -33,10 +33,10 @@ src/
 Clone the repository:
 `git clone https://github.com/your-repo/rmtDev.git`
 
-Install dependencies:
+## Install dependencies:
 
-- `cd rmtDev`
-- `npm install`
+1. `cd rmtDev`
+2. `npm install`
 
 ## Usage
 
