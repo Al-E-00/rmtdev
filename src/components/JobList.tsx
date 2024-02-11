@@ -13,15 +13,21 @@ export function JobList({ jobItems, isLoading }: TJobListProps) {
 
   return (
     <ul className="job-list">
-      {isLoading && <Spinner />}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        jobItems.map((jobItem: TJobItem) => {
+          const isActive = jobItem.id === activeId;
 
-      {jobItems.map((jobItem: TJobItem) => {
-        const isActive = jobItem.id === activeId;
-
-        return (
-          <JobListItem key={jobItem.id} jobItem={jobItem} isActive={isActive} />
-        );
-      })}
+          return (
+            <JobListItem
+              key={jobItem.id}
+              jobItem={jobItem}
+              isActive={isActive}
+            />
+          );
+        })
+      )}
     </ul>
   );
 }
