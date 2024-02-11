@@ -1,6 +1,6 @@
-import { useActiveIdContext } from "../context/ActiveIdContextProvider";
 import JobListItem from "./JobListItem";
 import Spinner from "./Spinner";
+import { useActiveIdContext } from "./lib/hooks";
 import { TJobItem } from "./lib/types";
 
 type TJobListProps = {

@@ -4,7 +4,7 @@ import { BASE_API_URL } from "./constants";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { handleError } from "./utils";
 import { BookmarksContext } from "../../context/BookmarksContextProvider";
-import { useActiveIdContext } from "../../context/ActiveIdContextProvider";
+import { ActiveIdContext } from "../../context/ActiveIdContextProvider";
 
 type JobItemsApiResponse = {
   public: boolean;
@@ -174,5 +174,15 @@ export function useBookmarksContext() {
     );
   }
 
+  return context;
+}
+
+export function useActiveIdContext() {
+  const context = useContext(ActiveIdContext);
+  if (!context) {
+    throw new Error(
+      "useActiveId must be used within a ActiveIdContextProvider"
+    );
+  }
   return context;
 }

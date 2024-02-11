@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 type TActiveIdContext = {
   activeId: number | null;
@@ -34,14 +34,4 @@ export default function ActiveIdContextProvider({
       {children}
     </ActiveIdContext.Provider>
   );
-}
-
-export function useActiveIdContext() {
-  const context = useContext(ActiveIdContext);
-  if (!context) {
-    throw new Error(
-      "useActiveId must be used within a ActiveIdContextProvider"
-    );
-  }
-  return context;
 }
