@@ -36,7 +36,7 @@ export function useSearchQuery(searchText: string) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(searchText),
-      onError: (error) => handleError(error),
+      onError: handleError,
     }
   );
 
@@ -72,7 +72,7 @@ export function useJobDetails(id: number | null) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(id),
-      onError: (error) => handleError(error),
+      onError: handleError,
     }
   );
 
@@ -89,13 +89,13 @@ export function useJobItems(ids: number[]) {
       refetchOnWindowFocus: false,
       retry: false,
       enabled: Boolean(id),
-      onError: (error) => handleError(error),
+      onError: handleError,
     })),
   });
 
   const jobItems = results
     .map((result) => result.data?.jobItem)
-    .filter((jobItem) => jobItem !== undefined);
+    .filter((jobItem) => Boolean(jobItem)) as TJobDetails[];
 
   const isLoading = results.some((result) => result.isLoading);
 
