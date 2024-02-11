@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useCallback, useMemo, useState } from "react";
 import { useDebounce } from "../components/lib/hooks";
 
 type TSearchContext = {
@@ -19,14 +19,21 @@ export default function SearchTextContextProvider({
   const [searchText, setSearchText] = useState("");
   const debouncedSearchText = useDebounce(searchText, 250);
 
-  const handleChangeSearchText = (newSearchText: string) => {
+  const handleChangeSearchText = useCallback((newSearchText: string) => {
     setSearchText(newSearchText);
-  };
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      searchText,
+      debouncedSearchText,
+      handleChangeSearchText,
+    }),
+    [searchText, debouncedSearchText, handleChangeSearchText]
+  );
 
   return (
-    <SearchTextContext.Provider
-      value={{ searchText, debouncedSearchText, handleChangeSearchText }}
-    >
+    <SearchTextContext.Provider value={contextValue}>
       {children}
     </SearchTextContext.Provider>
   );

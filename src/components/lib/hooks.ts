@@ -6,7 +6,7 @@ import { handleError } from "./utils";
 import { BookmarksContext } from "../../context/BookmarksContextProvider";
 import { ActiveIdContext } from "../../context/ActiveIdContextProvider";
 import { SearchTextContext } from "../../context/SearchTextContextProvider";
-import { JobItemsContext } from "../../context/JobItemsContextProvide";
+import { JobItemsContext } from "../../context/JobItemsContextProvider";
 
 type JobItemsApiResponse = {
   public: boolean;

@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import BookmarksContextProvider from "./context/BookmarksContextProvider.tsx";
 import ActiveIdContextProvider from "./context/ActiveIdContextProvider.tsx";
 import SearchTextContextProvider from "./context/SearchTextContextProvider.tsx";
-import JobItemsContextProvider from "./context/JobItemsContextProvide.tsx";
+import JobItemsContextProvider from "./context/JobItemsContextProvider.tsx";
 
 const queryClient = new QueryClient();
 

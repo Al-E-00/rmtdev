@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 
 type TActiveIdContext = {
   activeId: number | null;
@@ -29,8 +29,10 @@ export default function ActiveIdContextProvider({
     };
   }, []);
 
+  const contextValue = useMemo(() => ({ activeId }), [activeId]);
+
   return (
-    <ActiveIdContext.Provider value={{ activeId }}>
+    <ActiveIdContext.Provider value={contextValue}>
       {children}
     </ActiveIdContext.Provider>
   );
