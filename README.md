@@ -35,8 +35,8 @@ Clone the repository:
 
 Install dependencies:
 
-`cd rmtDev`
-`npm install`
+- `cd rmtDev`
+- `npm install`
 
 ## Usage
 
