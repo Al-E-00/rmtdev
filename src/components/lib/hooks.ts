@@ -4,6 +4,7 @@ import { BASE_API_URL } from "./constants";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import { handleError } from "./utils";
 import { BookmarksContext } from "../../context/BookmarksContextProvider";
+import { useActiveIdContext } from "../../context/ActiveIdContextProvider";
 
 type JobItemsApiResponse = {
   public: boolean;
@@ -104,28 +105,8 @@ export function useJobItems(ids: number[]) {
 
 /* ----------------------------------------------- */
 
-export function useActiveId() {
-  const [activeId, setActiveId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const id = +window.location.hash.slice(1);
-      setActiveId(id);
-    };
-    handleHashChange();
-
-    window.addEventListener("hashchange", handleHashChange);
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, []);
-
-  return activeId;
-}
-
 export function useActiveJobItem() {
-  const activeId = useActiveId();
+  const { activeId } = useActiveIdContext();
   const [jobDetail, isLoading] = useJobDetails(activeId);
 
   return [jobDetail, isLoading] as const;
