@@ -16,7 +16,6 @@ export default function JobItemContent() {
     duration,
     salary,
     location,
-    relevanceScore,
     daysAgo,
     coverImgURL,
     companyURL,
